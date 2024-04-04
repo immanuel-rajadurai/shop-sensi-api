@@ -26,7 +26,10 @@ def get_questions_list_for_product(request, product_title):
 
             questions = question_list.question_list
 
-            return Response(f"{questions}", status=status.HTTP_200_OK)
+            response_dict = {"questions":questions}
+
+            # return Response(f"{questions}", status=status.HTTP_200_OK)
+            return JsonResponse(response_dict, status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
         
@@ -40,6 +43,8 @@ def get_questions_list_for_product(request, product_title):
 def add_product(request):
     try:
         product_title = request.data.get('product_title')
+
+        print("product title is", product_title)
 
         if product_title:
 
@@ -59,7 +64,14 @@ def add_product(request):
             question_set = QuestionList(product=product, question_list=generated_questions_list)
             question_set.save()
 
-            return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
+            print("type of generated questions: ", type(generated_questions_list))
+
+            response_dict = {"questions":generated_questions_list}
+            print("response_dict: ", response_dict)
+
+            # return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
+
+            return JsonResponse(response_dict, status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
         
