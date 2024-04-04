@@ -87,6 +87,7 @@ def get_first_dict_string(input_string):
 
 
 def generate_attribute_value_pairs(product_title):
+    #testing
     #response_text = """{'category': 'Hard Drives', 'Type': 'SSD', 'Form Factor': '2.5 inch', 'Rotational Speed': '0.28"', 'Interface': 'SATA III'}"""
 
     messages = [{"role": "system", "content": "Your task is to extract product attribute value pairs from the following product title which is enclosed within triple quotes."}, 
