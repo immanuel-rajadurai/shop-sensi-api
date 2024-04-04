@@ -1,6 +1,6 @@
 # from question_generator import QuestionGenerator
 # from models import Product
-# from ai_question_generator import llm_generate_questions_2
+from api.ai_helpers import llm_generate_questions, generate_attribute_value_pairs
 
 
 # product = Product(title="Notebook 500 pages hardback green", attributes={})
@@ -12,7 +12,9 @@
 # print(questions_list)
 
 
+pairs = generate_attribute_value_pairs("""PZOZ Tablet Stand for iPad 360°Rotate Tablet Holder for Desk,Adjustable iPad Stand Tablet Holder 6-12.9 inch Tablet Accessories""")
 
+print(pairs)
 
 
 

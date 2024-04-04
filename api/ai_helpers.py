@@ -22,12 +22,15 @@ openai.api_key = OPEN_AI_KEY
 # model_choice = "gpt-3.5-turbo-0125"
 # client = OpenAI(api_key=OPEN_AI_KEY)
 
+aqg_model_id="gpt-3.5-turbo-0125"
+pae_model_id="ft:gpt-3.5-turbo-0125:personal:most-rel-pae-1:8yNmx9JN"
+
 
 class QuestionSet(BaseModel):
     question_set: List[str] = Field(description="the list of questions that I should ask myself before I purchase the product")
  
 
-def llm_generate_questions_2(product_title:str, template_prompt:str, product_attributes=None) -> list:
+def llm_generate_questions(product_title:str, template_prompt:str, product_attributes=None) -> list:
 
     parser = PydanticOutputParser(pydantic_object=QuestionSet)
 
@@ -77,21 +80,28 @@ def parse_output(parser, raw_output, product_title, template_prompt):
 
         return dict(retried_parse)["question_set"]
 
+
 def get_first_dict_string(input_string):
     end_index = input_string.find('}') + 1
     return input_string[:end_index]
 
-def generate_attribute_value_pairs(product_title):
 
-    model="ft:gpt-3.5-turbo-0125:personal:most-rel-pae-1:8yNmx9JN"
+def generate_attribute_value_pairs(product_title):
+    #response_text = """{'category': 'Hard Drives', 'Type': 'SSD', 'Form Factor': '2.5 inch', 'Rotational Speed': '0.28"', 'Interface': 'SATA III'}"""
+
     messages = [{"role": "system", "content": "Your task is to extract product attribute value pairs from the following product title which is enclosed within triple quotes."}, 
                 {"role": "user", "content": f" \n \"\"\"{product_title}\"\"\" \nPlease provide the attribute value pairs in JSON dictionary format, the first attribute must be \"category\" which is the lowest-level, most appropriate category of the product. Every value must be a string."}
                ]
     temperature = 0.05
 
-    response = openai.chat.completions.create(model=model, messages=messages, temperature=temperature)
+    response = openai.chat.completions.create(model=pae_model_id, messages=messages, temperature=temperature)
 
     response_text = response.choices[0].message.content
 
-    return json.loads(get_first_dict_string(response_text).replace("'", "\""))
+    attribute_values_dict_string = get_first_dict_string(response_text).replace("'", "\"").replace("\"\"", "\"")
+
+    try:
+        return json.loads(attribute_values_dict_string)
+    except json.JSONDecodeError:
+        return {}
 

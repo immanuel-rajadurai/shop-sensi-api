@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, QuestionSet, AnswerSet
+from .models import Product, QuestionList, AnswerList
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,11 +8,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class QuestionSetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = QuestionSet
+        model = QuestionList
         fields = ('__all__')
 
 
 class AnswerSetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AnswerSet
+        model = AnswerList
         fields = ('__all__')

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Product, QuestionSet, AnswerSet
+from .models import Product, QuestionList, AnswerList
 from .serializers import ProductSerializer, QuestionSetSerializer
-from .ai_question_generator import generate_attribute_value_pairs
+from .ai_helpers import generate_attribute_value_pairs
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,13 +17,17 @@ def get_questions_list_for_product(request, product_title):
 
             product = Product.objects.get(title=product_title)
 
-            questions_list_object = QuestionSet.objects.get(product=product)
+            question_list = QuestionList.objects.get(product=product)
 
-            questions_list = questions_list_object.questionsList
+            questions = question_list.question_list
 
-            return Response(f"{questions_list}", status=status.HTTP_200_OK)
+            return Response(f"{questions}", status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
+        
+    except Product.DoesNotExist as e:
+        return Response(str(e), status=status.HTTP_404_NOT_FOUND)
+    
     except Exception as e:
         return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
  
@@ -31,6 +35,7 @@ def get_questions_list_for_product(request, product_title):
 def add_product(request):
     try:
         product_title = request.data.get('product_title')
+
         if product_title:
 
             attribute_value_pairs = generate_attribute_value_pairs(product_title)
@@ -39,12 +44,12 @@ def add_product(request):
             product.save()
 
             qg = QuestionGenerator(product, number_of_questions=7)
-            questions_list = qg.generate_questions()
+            generated_questions_list = qg.generate_questions()
 
-            question_set = QuestionSet(product=product, questionsList=questions_list)
+            question_set = QuestionList(product=product, question_list=generated_questions_list)
             question_set.save()
 
-            return Response(f"Generated questions: {question_set.questionsList}", status=status.HTTP_200_OK)
+            return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
         
@@ -60,14 +65,18 @@ def add_answer(request):
 
             product = Product.objects.get(title=product_title)
 
-            questions_set_object = QuestionSet.objects.get(product=product)
+            question_list = QuestionList.objects.get(product=product)
 
-            answer_set = AnswerSet(questionSet=questions_set_object, answers=answers_list)
+            answer_set = AnswerList(question_list=question_list, answer_list=answers_list)
             answer_set.save()
 
             return Response(f"Answers {answers_list} saved")
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
+    
+    except Product.DoesNotExist as e:
+        return Response(str(e), status=status.HTTP_404_NOT_FOUND)
         
     except Exception as e:
+        print("EXCEPTION: ", type(e))
         return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

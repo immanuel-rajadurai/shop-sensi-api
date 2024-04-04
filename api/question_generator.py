@@ -1,4 +1,4 @@
-from .ai_question_generator import llm_generate_questions_2
+from .ai_helpers import llm_generate_questions
 from .models import Product
 import json
 
@@ -21,5 +21,5 @@ class QuestionGenerator:
 
     def generate_questions(self) -> list:
 
-        questions_list = llm_generate_questions_2(self.product_title,  self.template_prompt, self.product_attributes)
+        questions_list = llm_generate_questions(self.product_title,  self.template_prompt, self.product_attributes)
         return questions_list
