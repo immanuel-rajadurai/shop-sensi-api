@@ -3,6 +3,7 @@ from rest_framework import generics
 from .models import Product, QuestionList, AnswerList
 from .serializers import ProductSerializer, QuestionSetSerializer
 from .ai_helpers import generate_attribute_value_pairs
+from .helpers import process_product_title
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,7 +16,11 @@ def get_questions_list_for_product(request, product_title):
     try:
         if product_title:
 
-            product = Product.objects.get(title=product_title)
+            print("product title is: ", product_title, " length is: ", len(product_title))
+
+            processed_product_title = process_product_title(product_title)
+
+            product = Product.objects.get(title=processed_product_title)
 
             question_list = QuestionList.objects.get(product=product)
 
@@ -38,9 +43,14 @@ def add_product(request):
 
         if product_title:
 
-            attribute_value_pairs = generate_attribute_value_pairs(product_title)
+            if (Product.objects.filter(title=product_title).exists()): #if the product already exists within DB
+                return Response(f"Product: {product_title} already exists within database", status=status.HTTP_400_BAD_REQUEST)
 
-            product = Product(title=product_title, attributes=attribute_value_pairs)
+            processed_product_title = process_product_title(product_title)
+
+            attribute_value_pairs = generate_attribute_value_pairs(processed_product_title)
+
+            product = Product(title=processed_product_title, attributes=attribute_value_pairs)
             product.save()
 
             qg = QuestionGenerator(product, number_of_questions=7)

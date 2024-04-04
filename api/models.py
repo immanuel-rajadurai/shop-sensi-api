@@ -4,7 +4,7 @@ from django.db.models import JSONField
 # Create your models here.
 
 class Product(models.Model):
-    title = models.CharField(max_length=100, unique=True, primary_key=True) 
+    title = models.CharField(max_length=254, unique=True, primary_key=True) 
     attributes = models.JSONField(default=dict, blank=True, null=True)
     
     def __str__(self):
