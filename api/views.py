@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 from .question_generator import QuestionGenerator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
+@csrf_exempt
 @api_view(['GET'])
 def get_questions_list_for_product(request, product_title):
     try:
@@ -40,7 +41,7 @@ def get_questions_list_for_product(request, product_title):
     except Exception as e:
         return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
  
-@csrf_protect
+@csrf_exempt
 @api_view(['POST'])
 def add_product(request):
     try:
