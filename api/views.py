@@ -27,7 +27,7 @@ def get_questions_list_for_product(request, product_title):
 
             questions = question_list.question_list
 
-            response_dict = {"questions":questions}
+            # response_dict = {"questions":questions}
 
             return Response(f"{questions}", status=status.HTTP_200_OK)
             # return JsonResponse(response_dict, status=status.HTTP_200_OK)
@@ -65,10 +65,10 @@ def add_product(request):
             question_set = QuestionList(product=product, question_list=generated_questions_list)
             question_set.save()
 
-            print("type of generated questions: ", type(generated_questions_list))
+            # print("type of generated questions: ", type(generated_questions_list))
 
-            response_dict = {"questions":generated_questions_list}
-            print("response_dict: ", response_dict)
+            # response_dict = {"questions":generated_questions_list}
+            # print("response_dict: ", response_dict)
 
             return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
 
