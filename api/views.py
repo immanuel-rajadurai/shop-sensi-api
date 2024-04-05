@@ -29,8 +29,8 @@ def get_questions_list_for_product(request, product_title):
 
             response_dict = {"questions":questions}
 
-            # return Response(f"{questions}", status=status.HTTP_200_OK)
-            return JsonResponse(response_dict, status=status.HTTP_200_OK)
+            return Response(f"{questions}", status=status.HTTP_200_OK)
+            # return JsonResponse(response_dict, status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
         
