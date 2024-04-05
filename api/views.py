@@ -12,7 +12,6 @@ from rest_framework.decorators import api_view
 from .question_generator import QuestionGenerator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
-@csrf_exempt
 @api_view(['GET'])
 def get_questions_list_for_product(request, product_title):
     try:
@@ -41,7 +40,6 @@ def get_questions_list_for_product(request, product_title):
     except Exception as e:
         return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
  
-@csrf_exempt
 @api_view(['POST'])
 def add_product(request):
     try:
@@ -72,9 +70,9 @@ def add_product(request):
             response_dict = {"questions":generated_questions_list}
             print("response_dict: ", response_dict)
 
-            # return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
+            return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
 
-            return JsonResponse(response_dict, status=status.HTTP_200_OK)
+            # return JsonResponse(response_dict, status=status.HTTP_200_OK)
         else:
             return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
         
