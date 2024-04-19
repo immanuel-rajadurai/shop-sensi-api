@@ -1,38 +1,27 @@
 from django.shortcuts import render
-from rest_framework import generics
 from .models import Product, QuestionList, AnswerList
-from .serializers import ProductSerializer, QuestionSetSerializer
-from .ai_helpers import generate_attribute_value_pairs
-from .helpers import process_product_title
+from .ai_helpers import generate_attribute_value_pairs, process_product_title
 from django.http import JsonResponse
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .question_generator import QuestionGenerator
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 @api_view(['GET'])
 def get_questions_list_for_product(request, product_title):
     try:
-        if product_title:
 
-            print("product title is: ", product_title, " length is: ", len(product_title))
+        processed_product_title = process_product_title(product_title)
 
-            processed_product_title = process_product_title(product_title)
+        product = Product.objects.get(title=processed_product_title)
 
-            product = Product.objects.get(title=processed_product_title)
+        question_list = QuestionList.objects.get(product=product)
 
-            question_list = QuestionList.objects.get(product=product)
+        questions = question_list.question_list
 
-            questions = question_list.question_list
+        response_dict = {"questions":questions}
 
-            response_dict = {"questions":questions}
-
-            # return Response(f"{questions}", status=status.HTTP_200_OK)
-            return JsonResponse(response_dict, status=status.HTTP_200_OK)
-        else:
-            return Response("Missing 'product_title' in JSON data", status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(response_dict, status=status.HTTP_200_OK)
         
     except Product.DoesNotExist as e:
         return Response(str(e), status=status.HTTP_404_NOT_FOUND)
@@ -44,8 +33,6 @@ def get_questions_list_for_product(request, product_title):
 def add_product(request):
     try:
         product_title = request.data.get('product_title')
-
-        print("product title is", product_title)
 
         if product_title:
 
@@ -59,18 +46,14 @@ def add_product(request):
             product = Product(title=processed_product_title, attributes=attribute_value_pairs)
             product.save()
 
-            qg = QuestionGenerator(product, number_of_questions=7)
+            qg = QuestionGenerator(product)
             generated_questions_list = qg.generate_questions()
 
             question_set = QuestionList(product=product, question_list=generated_questions_list)
             question_set.save()
 
-            # print("type of generated questions: ", type(generated_questions_list))
 
             response_dict = {"questions":generated_questions_list}
-            print("response_dict: ", response_dict)
-
-            # return Response(f"Generated questions: {question_set.question_list}", status=status.HTTP_200_OK)
 
             return JsonResponse(response_dict, status=status.HTTP_200_OK)
         else:
@@ -101,5 +84,4 @@ def add_answer(request):
         return Response(str(e), status=status.HTTP_404_NOT_FOUND)
         
     except Exception as e:
-        print("EXCEPTION: ", type(e))
         return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,0 +1,16 @@
+# .coveragerc
+
+[run]
+omit =
+    */migrations/*
+    */venv/*
+    */other_directory/*
+    */api/urls.py*
+    */sensi/settings.py*
+    */sensi/urls.py*
+    *manage.py*
+    */api/admin.py*
+    */api/apps.py*
+    */api/__init__.py*
+    */sensi/__init__.py*
+

@@ -4,20 +4,33 @@ import json
 
 class QuestionGenerator:
 
-    def __init__(self, product:Product, number_of_questions:int=7):
+    def __init__(self, product:Product):
         self.product_title = product.title
         self.product_attributes = product.attributes
-        self.number_of_questions = number_of_questions
-        self.template_prompt =   """I am considering purchasing a product, the title of the product is delimited by triple backticks. \
-                                    Generate 7 questions that I should to ask myself before I purchase that product. \
-                                    Ask the questions in yes/no format such that a "yes" answer to the question means that the purchase is rational for me and a "no" answer to the question means that the purchase is irrational for me. \
-                                    Ask the questions in second person tense.  Refrain from asking questions relating to brand, budget or warranty.
 
-                                    product title: ```{product_title}```
+        self.template_prompt = """
+            You are an intelligent shopping assistant that helps customers make smarter purchases. \
 
-                                    {format_instructions}
-                                """
-        print("attribute value pairs within AQG are: ", self.product_attributes)
+            A customer is considering purchasing a product, the title of the product is delimited by triple backticks. \
+            The attributes of the product are delimited by triple backticks \
+            Generate 7 questions that you will ask the customer to help them decide whether to purchase the product or not. \
+            Ensure that you use the information about the product provided to you \n
+
+            The questions must follow a "consistent rationality motive" standard. \
+            A question is in the "consistent rationality motive" standard if a "yes" answer to the question implies that the product is rational \
+            for the customer to purchase and a "no" answer to the question implies that the product is irrational \
+            for the customer to purchase. A rational purchase is defined as a purchase that best meets the customer's needs, \
+            and is healthy for them in the long term \
+            Ask the questions in second person tense.  Refrain from asking questions relating to budget, price, warranty, retailer, e-commerce company or reviews. \            
+            Avoid asking the questions in a way that is biased to persuade the customer to buy the product. \
+            For every question you generate, think step by step and outline your reasoning as to why the question adheres to the "consistent rationality motive" \
+            
+            product title: ```{product_title}``` \n
+            product attributes: ```{product_attributes}``` \n
+
+            {format_instructions}
+        """
+
 
     def generate_questions(self) -> list:
 
