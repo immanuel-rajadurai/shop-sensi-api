@@ -6,11 +6,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 from .question_generator import QuestionGenerator
+import urllib
 
 @api_view(['GET'])
 def get_questions_list_for_product(request, product_title):
     try:
-
+        
         processed_product_title = process_product_title(product_title)
 
         product = Product.objects.get(title=processed_product_title)

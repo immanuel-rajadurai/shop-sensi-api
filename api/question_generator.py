@@ -16,14 +16,12 @@ class QuestionGenerator:
             Generate 7 questions that you will ask the customer to help them decide whether to purchase the product or not. \
             Ensure that you use the information about the product provided to you \n
 
-            The questions must follow a "consistent rationality motive" standard. \
-            A question is in the "consistent rationality motive" standard if a "yes" answer to the question implies that the product is rational \
+            Ask each each question such that a "yes" answer to the question implies that the product is rational \
             for the customer to purchase and a "no" answer to the question implies that the product is irrational \
             for the customer to purchase. A rational purchase is defined as a purchase that best meets the customer's needs, \
             and is healthy for them in the long term \
             Ask the questions in second person tense.  Refrain from asking questions relating to budget, price, warranty, retailer, e-commerce company or reviews. \            
             Avoid asking the questions in a way that is biased to persuade the customer to buy the product. \
-            For every question you generate, think step by step and outline your reasoning as to why the question adheres to the "consistent rationality motive" \
             
             product title: ```{product_title}``` \n
             product attributes: ```{product_attributes}``` \n

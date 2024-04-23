@@ -97,23 +97,23 @@ WSGI_APPLICATION = 'sensi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dc4auqole59au7',
-        'USER': 'vbdxehrcscfdiy',
-        'PASSWORD':'898fcb505f3d1e653d6e3bc5718f70cc4250270ef8168d389e41adda22f900df',
-        'HOST':'ec2-34-254-138-204.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'dc4auqole59au7',
+#         'USER': 'vbdxehrcscfdiy',
+#         'PASSWORD':'898fcb505f3d1e653d6e3bc5718f70cc4250270ef8168d389e41adda22f900df',
+#         'HOST':'ec2-34-254-138-204.eu-west-1.compute.amazonaws.com',
+#         'PORT': '5432'
+#     }
+# }
 
 
 # Password validation

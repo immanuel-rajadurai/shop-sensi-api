@@ -24,13 +24,8 @@ aqg_model_id="gpt-3.5-turbo-0125"
 pae_model_id="ft:gpt-3.5-turbo-0125:personal:most-rel-pae-1:8yNmx9JN"
 
 
-# class QuestionSet(BaseModel):
-#     question_set: List[str] = Field(description="the list of questions that I should ask myself before I purchase the product")
-
-
 class QuestionSet(BaseModel):
     question_set: List[str] = Field(description="the list of questions to ask the customer before they purchase the product")
-    reasoning_set: List[str] = Field(description="""the chain of reasoning for every question as to why the question obeys the "consistent rationality motive" """)
  
 
 def llm_generate_questions(product_title:str, template_prompt:str, product_attributes={}) -> list:
